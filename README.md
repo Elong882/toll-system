@@ -6,14 +6,16 @@ This project implements an RFID-based access control system using an Arduino boa
 
 Features
 
-RFID card reading and validation
-Servo-controlled mechanism
+-RFID card reading and validation
+-Servo-controlled mechanism
+-Web server integration for access logging
+-Wi-Fi connectivity for remote monitoring
+
 Visual feedback through:
 -OLED display showing access status
 -RGB LED indicators (Blue for standby, Green for access granted, Red for access denied)
+
 Audio feedback through a buzzer
-Web server integration for access logging
-Wi-Fi connectivity for remote monitoring
 
 Hardware Requirements
 
