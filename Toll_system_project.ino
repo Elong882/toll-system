@@ -76,16 +76,15 @@ void setup() {
 
 void loop() {
   // Default LED states
-  digitalWrite(BlueLED, HIGH); // Default state
+  digitalWrite(BlueLED, HIGH);
   digitalWrite(RedLED, LOW);
   digitalWrite(GreenLED, LOW);
-  noTone(Buzzer);             // Turn off buzzer
-  servo.write(10);            // Keep servo closed
+  noTone(Buzzer);
 
   // Wait for an RFID card to be detected
   if (getUID()) {
     Serial.print("UID: ");
-    Serial.println(UIDCard); // Print the detected UID
+    Serial.println(UIDCard);
 
     display.clearDisplay();
     display.setCursor(0, 0);
@@ -96,27 +95,42 @@ void loop() {
     if (UIDCard == MasterTag) {
       // Access Granted
       display.println("Granted");
+      display.display();  // Update display immediately
+      
       digitalWrite(GreenLED, HIGH);
       digitalWrite(BlueLED, LOW);
       digitalWrite(RedLED, LOW);
-      servo.write(90); // Open servo for access
-      delay(50);
-
+      
+      // Open servo
+      servo.write(90);
+      
       // Blink Buzzer for Granted Access
       for (int i = 0; i < 2; i++) {
-        tone(Buzzer, 2000); // Generate sound at 2000 Hz
+        tone(Buzzer, 2000);
         delay(250);
         noTone(Buzzer);
         delay(250);
       }
-      accessStatus = "Granted"; // Update access status
+      
+      // Keep gate open for 3 seconds
+      delay(3000);
+      
+      // Close the gate
+      servo.write(10);
+      
+      accessStatus = "Granted";
+      
+      // Turn off success indicators
+      digitalWrite(GreenLED, LOW);
+      
     } else {
-      // Access Denied
+      // Access Denied logic remains the same
       display.println("Denied");
+      display.display();  // Update display immediately
       digitalWrite(BlueLED, LOW);
       digitalWrite(GreenLED, LOW);
-      tone(Buzzer, 2000); // Generate sound for denied access
-      servo.write(10);    // Keep servo closed
+      tone(Buzzer, 2000);
+      servo.write(10);
       for (int i = 0; i < 10; i++) {
         digitalWrite(RedLED, HIGH);
         delay(250);
@@ -129,8 +143,8 @@ void loop() {
     // Send the data to the server
     sendDataToServer(UIDCard, accessStatus);
 
-    display.display();
-    delay(2000); // Delay before resetting display
+    // Wait a short moment before resetting display
+    delay(1000);
 
     // Reset the display
     display.clearDisplay();
@@ -189,6 +203,10 @@ void sendDataToServer(String rfid_id, String access_status) {
       Serial.println(response);
     }
     client.stop(); // Close the connection
+  } else {
+    Serial.println("Connection to server failed");
+  }
+}
   } else {
     Serial.println("Connection to server failed");
   }
