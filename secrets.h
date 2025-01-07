@@ -1,3 +1,3 @@
 // WiFi Credentials
-#define ssid "SKYM9C7D"
-#define password "r96bxr28ni3x"
+#define ssid "your_wifi_ssid"
+#define password "your_wifi_password"
